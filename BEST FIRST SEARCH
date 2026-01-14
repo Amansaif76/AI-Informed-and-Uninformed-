@@ -1,0 +1,47 @@
+class Maze:
+  def __init__(self,maze):
+    self.maze = maze
+    self.rows = len(maze)
+    self.cols = len(maze[0])
+
+  def start(self):
+    return (0,0)
+
+  def goal(self):
+    return (self.rows - 1, self.cols - 1)
+
+  directions = [(1,0),(0,1),(-1,0),(0,-1)]
+
+  def neighbours(self, state):
+    r,c = state
+    for dr,dc in self.directions:
+      nr,nc = r + dr, c + dc
+
+      if 0 <= nr <self.rows and 0<=nc<self.cols and self.maze[nr][nc] != 1:
+        yield(nr,nc)
+def BFS(maze:Maze):
+  start = maze.start()
+  goal = maze.goal()
+  queue = [(start, [])]
+  visited = set()
+
+  while queue:
+    state, path = queue.pop(0)
+    if state == goal:
+      return path + [state]
+    visited.add(state)
+    for neighbour in maze.neighbours(state):
+      if neighbour not in visited:
+        queue.append((neighbour,path + [neighbour]))
+
+grid = [[0, 0, 0, 0, 1, 0, 0],
+    [1, 1, 0, 1, 1, 0, 1],
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 0, 1, 0],
+    [0, 0, 0, 0, 0, 1, 0],
+    [1, 0, 1, 1, 0, 0, 0],
+    [0, 0, 0, 1, 1, 1, 0]]
+
+maze = Maze(grid)
+path = BFS(maze)
+print(path)
